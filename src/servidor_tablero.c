@@ -256,7 +256,12 @@ int crear_socket_escucha(int puerto) {
     }
 
     /* El puerto queda disponible de inmediato al terminar el servidor */
-    setsockopt(socket_escucha, SOL_SOCKET, SO_REUSEADDR, &reutilizar, sizeof(reutilizar));
+    if (setsockopt(socket_escucha, SOL_SOCKET, SO_REUSEADDR,
+                   &reutilizar, sizeof(reutilizar)) == -1) {
+        perror("setsockopt");
+        close(socket_escucha);
+        return -1;
+    }
 
     memset(&direccion, 0, sizeof(direccion));
     direccion.sin_family = AF_INET;
@@ -315,6 +320,7 @@ void *atender_cliente(void *arg) {
         }
 
         if (write(socket_cliente, respuesta, strlen(respuesta)) == -1) {
+            perror("write");
             break;
         }
     }
@@ -332,7 +338,11 @@ int leer_linea(int socket_cliente, char *destino, int tam) {
         leidos = read(socket_cliente, &caracter, 1);
 
         /* El cliente cerro la conexion: una linea a medias no se procesa */
-        if (leidos <= 0) {
+        if (leidos == 0) {
+            return -1;
+        }
+        if (leidos == -1) {
+            perror("read");
             return -1;
         }
         if (caracter == '\n') {
