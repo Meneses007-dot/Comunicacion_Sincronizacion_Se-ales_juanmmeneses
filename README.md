@@ -87,4 +87,4 @@ Las respuestas exitosas comienzan con `OK` e incluyen la versión del tablero.
 - `src/cliente_tablero.c`: cliente para lecturas y escrituras.
 - `src/carga.sh`: prueba concurrente de carga.
 - `bitacora.md`: resultados y análisis del taller.
-# Comunicacion_Sincronizacion_Se-ales_juanmmeneses
+# Comunicacion_Sincronizacion_Senales_juanmmeneses
